@@ -11,12 +11,13 @@ import com.lucidworks.fusion.connector.plugin.config.FeedConfig;
 import com.lucidworks.fusion.connector.plugin.feed.Feed;
 import com.lucidworks.fusion.connector.plugin.feed.FeedEntry;
 import com.lucidworks.fusion.connector.plugin.feed.FeedGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.api.validation.constants.FetchInputValidatorConstants.NOT_MODIFIED;
 

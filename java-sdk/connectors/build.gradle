@@ -22,7 +22,7 @@ subprojects {
   }
 
   dependencies {
-    provided ("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
+    provided("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
   }
@@ -32,12 +32,11 @@ subprojects {
   }
 
   task plugin(type: Jar) {
-    archiveName = "${project.name}" + ".zip"
     manifest {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
-          'Plugin-Version': "${fusionVersion}",
+          'Plugin-Version': "${version}",
           'Plugin-Provider': "${pluginProvider}",
           'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
@@ -55,11 +54,26 @@ subprojects {
   }
 
   task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
-    commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
-            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
-            "--data-binary",
-            "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+
+    def service = "${restService}"
+    if (!service.endsWith("/")) {
+      service += "/"
+    }
+    service += "plugins"
+    commandLine "curl",
+        "-u",
+        "${userPass}",
+        "-X",
+        "PUT",
+        "-H",
+        "content-type:application/zip",
+        "${service}",
+        "--data-binary",
+        "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+
     doLast {
+      logger.info("    >> Running Command:  \n" +
+          "       > " + commandLine.join(' ') + "\n")
       logger.info("Curl result: ${standardOutput.toString().trim()}")
     }
   }

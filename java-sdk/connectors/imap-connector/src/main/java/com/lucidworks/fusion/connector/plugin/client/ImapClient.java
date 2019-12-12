@@ -1,9 +1,6 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -20,6 +17,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImapClient {
 

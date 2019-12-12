@@ -7,8 +7,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
-    name = "demo.security.filtering",
-    title = "Security Filtering Generator",
+    title = "Security Filtering Generator (v2)",
     description = "A connector that generates random documents, document ACLs and access controls.",
     category = "Generator"
 )

@@ -8,15 +8,17 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInpu
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.INVALID;
@@ -83,11 +85,16 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
       int level,
       List<String> levelGroups
   ) {
+    Map<String, Object> fields = Maps.newHashMap();
+    fields.put("uno", "1");
+    fields.put("dos", "2");
+    fields.put("tres", "3");
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.USER);
     metadata.put(PARENTS, levelGroups);
     ctx.newCandidate(String.format(USER_ID_FORMAT, level))
         .withMetadata(metadata)
+        .withFields(fields)
         .emit();
   }
   
@@ -127,27 +134,41 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     
     Map<String, Object> metadata = input.getMetadata();
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
-    
+    Map<String, Object> fields0 = new HashMap<>();
+
+    fields0.put("f_uno_1", "1");
+    fields0.put("f_dos_2", "2");
+
     if (type.equals(AccessControlConstants.ACL)) {
       Long number = (Long) input.getMetadata().get("number") ;
       Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
+      Map<String, Object> metadata0 = new HashMap<>();
 
-      ctx.newDocumentACL(input.getId())
+      metadata0.put("m_uno_1", "1");
+      metadata0.put("m_dos_2", "2");
+
+
+
+      ctx.newAccessControlItem(input.getId(), AccessControlConstants.ACL)
+          .withMetadata(fields0)
+          .withMetadata(metadata0)
           .withInbound(
               String.format(
                   GROUP_ID_FORMAT,
                   groupLevel.intValue(),
                   random.nextInt(groupLevel.intValue()) + 1
-              )
-          ).emit();
+              ))
+          .emit();
     } else if (type.equals(AccessControlConstants.GROUP)) {
       ctx.newGroup(input.getId())
+         // .withFields(fields0)
           .withOutbound(
               (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
           )
           .emit();
     } else if (type.equals(AccessControlConstants.USER)) {
       ctx.newUser(input.getId())
+          //.withFields(fields0)
           .withOutbound(
               (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
           )

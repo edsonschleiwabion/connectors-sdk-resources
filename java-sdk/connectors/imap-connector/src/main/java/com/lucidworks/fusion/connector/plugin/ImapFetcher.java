@@ -6,13 +6,14 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFe
 import com.lucidworks.fusion.connector.plugin.client.Email;
 import com.lucidworks.fusion.connector.plugin.client.ImapClient;
 import com.lucidworks.fusion.connector.plugin.client.MailException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.ImapConstants.BODY_FIELD;
 import static com.lucidworks.fusion.connector.plugin.ImapConstants.CC_FIELD;
